@@ -43,7 +43,7 @@ def test_hook_queue_purge(rabbitmq_hook):
     rabbitmq_hook.publish("", "test", "Hello World")
     rabbitmq_hook.purge_queue("test")
     message = rabbitmq_hook.pull("test")
-    assert not message
+    assert message is None
 
 
 def test_hook_queue_delete(rabbitmq_hook):
