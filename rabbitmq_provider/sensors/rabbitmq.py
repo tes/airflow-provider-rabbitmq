@@ -28,7 +28,7 @@ class RabbitMQSensor(BaseSensorOperator):
     def poke(self, context):
         hook = RabbitMQHook(self.rabbitmq_conn_id)
         message = hook.pull(self.queue)
-        if message:
+        if message is not None:
             return True
         else:
             return False

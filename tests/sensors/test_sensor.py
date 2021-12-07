@@ -12,13 +12,27 @@ def reset_test_queue(monkeypatch):
     hook = RabbitMQHook(rabbitmq_conn_id="conn_rabbitmq")
     hook.delete_queue("test")
     hook.declare_queue("test")
-    hook.publish("", "test", "Hello World")
 
 
 def test_sensor():
     sensor = RabbitMQSensor(
         task_id="sample_sensor_check", rabbitmq_conn_id="conn_rabbitmq", queue="test"
     )
+    hook = RabbitMQHook(rabbitmq_conn_id="conn_rabbitmq")
+    hook.publish("", "test", "Hello World")
+
+    # Queue has 1 message, will be consumed and return True
+    assert sensor.poke(context={}) is True
+    # Queue now has no message, will return False
+    assert sensor.poke(context={}) is False
+
+
+def test_sensor_with_empty_content():
+    sensor = RabbitMQSensor(
+        task_id="sample_sensor_check", rabbitmq_conn_id="conn_rabbitmq", queue="test"
+    )
+    hook = RabbitMQHook(rabbitmq_conn_id="conn_rabbitmq")
+    hook.publish("", "test", "")
 
     # Queue has 1 message, will be consumed and return True
     assert sensor.poke(context={}) is True

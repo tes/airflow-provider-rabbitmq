@@ -125,7 +125,7 @@ class RabbitMQHook(BaseHook):
         method_frame, _, body = channel.basic_get(queue)
         if method_frame:
             channel.basic_ack(method_frame.delivery_tag)
-            message = str(body, "utf-8")
+            message = body
         else:
             message = None
         channel.close()

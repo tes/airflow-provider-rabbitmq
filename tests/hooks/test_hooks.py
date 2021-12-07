@@ -29,7 +29,7 @@ def test_hook_publish_and_pull(rabbitmq_hook):
     rabbitmq_hook.declare_queue("test")
     rabbitmq_hook.publish("", "test", "Hello World")
     message = rabbitmq_hook.pull("test")
-    assert message == "Hello World"
+    assert message == b"Hello World"
 
 
 def test_hook_queue_declare(rabbitmq_hook):
