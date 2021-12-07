@@ -88,6 +88,18 @@ class RabbitMQHook(BaseHook):
         channel.close()
         return declaration
 
+    def purge_queue(self, name: str) -> pika.frame.Method:
+        """Purge a queue.
+
+        :param name: the queue name
+        :type name: str
+        :returns: Method frame
+        :rtype: pika.frame.Method
+        """
+        connection = self.get_conn()
+        channel = connection.channel()
+        return channel.queue_purge(name)
+
     def delete_queue(self, name: str) -> pika.frame.Method:
         """Delete a queue.
 

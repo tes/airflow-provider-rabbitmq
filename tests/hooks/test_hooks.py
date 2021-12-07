@@ -38,6 +38,14 @@ def test_hook_queue_declare(rabbitmq_hook):
     assert queue
 
 
+def test_hook_queue_purge(rabbitmq_hook):
+    rabbitmq_hook.declare_queue("test")
+    rabbitmq_hook.publish("", "test", "Hello World")
+    rabbitmq_hook.purge_queue("test")
+    message = rabbitmq_hook.pull("test")
+    assert not message
+
+
 def test_hook_queue_delete(rabbitmq_hook):
     rabbitmq_hook.declare_queue("to_be_deleted")
     rabbitmq_hook.delete_queue("to_be_deleted")
