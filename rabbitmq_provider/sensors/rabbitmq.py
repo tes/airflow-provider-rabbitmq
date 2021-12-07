@@ -25,10 +25,18 @@ class RabbitMQSensor(BaseSensorOperator):
         self.queue = queue
         self.rabbitmq_conn_id = rabbitmq_conn_id
 
-    def poke(self, context):
+        self._return_value = None
+
+    def execute(self, context: dict):
+        """Overridden to allow messages to be passed"""
+        super().execute(context)
+        return self._return_value
+
+    def poke(self, context: dict):
         hook = RabbitMQHook(self.rabbitmq_conn_id)
         message = hook.pull(self.queue)
         if message is not None:
+            self._return_value = message
             return True
         else:
             return False
