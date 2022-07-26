@@ -61,6 +61,6 @@ def test_hook_queue_delete(rabbitmq_hook):
     rabbitmq_hook.delete_queue("to_be_deleted")
     with pytest.raises(
         ChannelClosedByBroker,
-        match="NOT_FOUND - no queue 'to_be_deleted' in vhost '/'",
+        match="""\(404, "NOT_FOUND - no queue \'to_be_deleted\'""",
     ):
         rabbitmq_hook.declare_queue("to_be_deleted", passive=True)
