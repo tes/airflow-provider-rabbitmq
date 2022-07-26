@@ -32,6 +32,16 @@ def test_hook_publish_and_pull(rabbitmq_hook):
     assert message == "Hello World"
 
 
+def test_hook_publish_many_and_pull(rabbitmq_hook):
+    rabbitmq_hook.declare_queue("test")
+    rabbitmq_hook.publish_many("", "test", ["foo","bar","baz"])
+    messages = []
+    messages.append(rabbitmq_hook.pull("test"))
+    messages.append(rabbitmq_hook.pull("test"))
+    messages.append(rabbitmq_hook.pull("test"))
+    assert messages == ["foo","bar","baz"]
+
+
 def test_hook_queue_declare(rabbitmq_hook):
     rabbitmq_hook.declare_queue("test")
     queue = rabbitmq_hook.declare_queue("test", passive=True)
