@@ -71,6 +71,22 @@ class RabbitMQHook(BaseHook):
         channel.basic_publish(exchange, routing_key, message)
         channel.close()
 
+    def publish_many(self, exchange: str, routing_key: str, messages: list) -> None:
+        """Publish multiple messages with the same connection channel.
+
+        :param exchange: the exchange to publish to
+        :type exchange: str
+        :param routing_key: the routing key to publish to
+        :type routing_key: str
+        :param messages: a list of messages to publish
+        :type messages: list[str]
+        """
+        connection = self.get_conn()
+        channel = connection.channel()
+        for message in messages:
+            channel.basic_publish(exchange, routing_key, message)
+        channel.close()
+
     def declare_queue(self, queue_name: str, passive: bool = False) -> pika.frame.Method:
         """Declare a queue.
 
